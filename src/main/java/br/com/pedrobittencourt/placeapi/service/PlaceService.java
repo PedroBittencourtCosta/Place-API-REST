@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class PlaceService {
@@ -20,4 +21,10 @@ public class PlaceService {
         place.setUpdatedAt(LocalDate.now());
         return placeRepository.save(place);
     }
+
+    @Transactional
+    public Optional<Place> getPlaceByName(String name){
+        return placeRepository.findByName(name);
+    }
+
 }
