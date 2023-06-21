@@ -6,6 +6,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class PlaceService {
 
@@ -14,6 +16,8 @@ public class PlaceService {
 
     @Transactional
     public Place saveNewPlace(Place place){
+        place.setCreatedAt(LocalDate.now());
+        place.setUpdatedAt(LocalDate.now());
         return placeRepository.save(place);
     }
 }
