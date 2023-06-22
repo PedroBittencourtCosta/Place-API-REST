@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -36,6 +37,13 @@ public class PlaceController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Place not found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(new PlaceResponseDto(optionalPlace.get()));
+    }
+
+    @GetMapping("/place")
+    public ResponseEntity<List<PlaceResponseDto>> getListPlace(){
+        var placeList = placeService.getPlaceList();
+        var dto = placeList.stream().map(place -> new PlaceResponseDto(place)).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
 }
