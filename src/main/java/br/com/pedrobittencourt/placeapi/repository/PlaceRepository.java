@@ -7,6 +7,4 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface PlaceRepository extends JpaRepository<Place, UUID> {
-
-    Optional<Place> findByName(String name);
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping
@@ -23,27 +24,23 @@ public class PlaceController {
     private PlaceService placeService;
 
     @PostMapping("/place")
-    public ResponseEntity<PlaceResponseDto> savePlace(@RequestBody @Valid PlaceRequestDto placeRequestDtoDto){
-        var place = new Place();
-        BeanUtils.copyProperties(placeRequestDtoDto, place);
-        var placeResponseDto = new PlaceResponseDto(placeService.saveNewPlace(place));
-        return ResponseEntity.status(HttpStatus.CREATED).body(placeResponseDto);
+    public ResponseEntity<PlaceResponseDto> savePlace(@RequestBody @Valid PlaceRequestDto placeRequestDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(placeService.saveNewPlace(placeRequestDto));
     }
 
-    @GetMapping("/place/{name}")
-    public ResponseEntity<Object> getPlace(@PathVariable(value = "name") String name){
-        Optional<Place> optionalPlace =  placeService.getPlaceByName(name);
-        if (optionalPlace.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Place not found");
+    @GetMapping("/place/{id}")
+    public ResponseEntity<Object> getPlace(@PathVariable(value = "id")UUID id){
+        Optional<PlaceResponseDto> optionalPlaceResponseDto = placeService.getPlaceById(id);
+        if (optionalPlaceResponseDto.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new PlaceResponseDto(optionalPlace.get()));
+        return ResponseEntity.status(HttpStatus.OK).body(optionalPlaceResponseDto);
     }
 
     @GetMapping("/place")
     public ResponseEntity<List<PlaceResponseDto>> getListPlace(){
-        var placeList = placeService.getPlaceList();
-        var dto = placeList.stream().map(place -> new PlaceResponseDto(place)).toList();
-        return ResponseEntity.status(HttpStatus.OK).body(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(placeService.getPlaceList());
     }
+
 
 }
