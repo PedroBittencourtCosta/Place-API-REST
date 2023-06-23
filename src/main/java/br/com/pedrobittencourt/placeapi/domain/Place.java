@@ -1,5 +1,6 @@
 package br.com.pedrobittencourt.placeapi.domain;
 
+import br.com.pedrobittencourt.placeapi.dto.PlaceRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,5 +26,12 @@ public class Place {
     private String state;
     private LocalDate createdAt;
     private LocalDate updatedAt;
+
+    public Place(PlaceRequestDto placeRequestDto){
+        name = placeRequestDto.name();
+        slug = placeRequestDto.slug();
+        city = placeRequestDto.city();
+        state = placeRequestDto.state();
+    }
 
 }

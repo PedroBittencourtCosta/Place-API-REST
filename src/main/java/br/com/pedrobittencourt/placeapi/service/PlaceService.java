@@ -7,8 +7,6 @@ import br.com.pedrobittencourt.placeapi.repository.PlaceRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -41,6 +39,28 @@ public class PlaceService {
     public List<PlaceResponseDto> getPlaceList(){
         List<Place> placeList = placeRepository.findAll();
         return placeList.stream().map(place -> new PlaceResponseDto(place)).toList();
+    }
+
+    @Transactional
+    public PlaceResponseDto changePlace(UUID id, PlaceRequestDto placeRequestDto){
+        Optional<Place> optionalPlace = placeRepository.findById(id);
+        if(optionalPlace.isEmpty()){
+            return null;
+        }
+        BeanUtils.copyProperties(placeRequestDto, optionalPlace.get());
+        return new PlaceResponseDto(placeRepository.save(optionalPlace.get()));
+    }
+
+    @Transactional
+    public Object deletePlace(UUID id){
+        Optional<Place> optionalPlace = placeRepository.findById(id);
+        if (!optionalPlace.isEmpty()){
+            placeRepository.delete(optionalPlace.get());
+            return "Lugar deletado com sucesso";
+        }
+
+        return null;
+
     }
 
 
